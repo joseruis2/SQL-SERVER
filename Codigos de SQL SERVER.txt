@@ -1,0 +1,552 @@
+
+--CREAR BASE DE DATOS
+--FORMA 1
+create database ruiz_quispe
+
+exec sp_helpdb ruiz_quispe
+--información detallada sobre una base de datos
+---------------------------------------------------------------------------------------------------
+
+--FORMA 2
+create database ruiz_quispe
+on (
+	Name = FARMACIA_Data, Filename = 'C:\DatosFar\FARMACIA_Data.MDF',
+	Size = 5MB, MaxSize = 50MB, Filegrowth = 5MB
+	)
+Log on
+	(
+	Name = FARMACIA_Log, Filename = 'C:\DatosFar\FARMACIA_Log.LDF',
+	Size = 5MB, MaxSize = 150MB, Filegrowth = 5MB
+	)
+go
+
+
+exec sp_helpdb ruiz_quispe
+--obtener información detallada sobre una base de datos
+------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+
+
+--PARA USAR LA BASE DE DATOS ruiz_quispe
+USE ruiz_quispe
+
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
+
+--AGREGAR UNA NUEVA COLUMNA EN UNA TABLA
+alter table VENDEDOR add fecha_nac DATE not null
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--ELIMINAR UNA BASE DE DATOS
+drop database ruiz_quispe
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--ELIMINAR UNA TABLA
+drop table VENDEDOR
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--PARA ELIMINAR REGISTROS INSERTADOS EN UNA TABLA
+delete from DETALLE_VENTA
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--PARA ELIMINAR UNA FILA DE INSERTADOS EN UNA TABLA
+DELETE FROM DETALLE_VENTA
+WHERE id_venta = 'V0007';
+select * from DETALLE_VENTA
+
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--ELEMINAR UN PROCEDIMIENTO
+drop procedure ejercicios
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--CREAR UNA TABLA
+create table DETALLE_VENTA(
+id_venta CHAR(5) Primary key not null,
+id_producto char(4) not null,
+id_cliente char(4) not null,
+id_vendedor char(4) not null,
+cantidad int not null,
+total_pagar int not null);
+
+sp_help DETALLE_VENTA
+
+
+create table VENDEDOR(
+id_vendedor char(4)primary key not null,
+nombre_ven varchar(50) not null,
+fecha_nac date not null)
+
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+--RELACIONAR LA TABLA DETALLE_VENTA a VENDEDOR
+--PARA RELACIONAR UNA TABLA DEL DETALLE_VENTA de id_vendedor("4") a VENDEDOR(id_vendedor)("4")
+--LOS DOS DEBE COINCIDIR CON EL MISMO NUMERO
+
+alter table DETALLE_VENTA add foreign key (id_vendedor) references VENDEDOR(id_vendedor)
+
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+--INSERTAMOS VENDEDOR
+--select * from VENDEDOR VERIFICAMOS LOS DATOS AGREGADOS
+
+insert into  VENDEDOR (id_vendedor,nombre_ven,fecha_nac) values ('V007','camila','09/25/2000')
+select * from VENDEDOR
+
+insert into  DETALLE_VENTA (id_venta,id_producto,id_cliente,id_vendedor,cantidad,total_pagar) values ('V0007','C004','C001','V007',1,10)
+select * from DETALLE_VENTA
+
+
+
+--INSERTAR 2DA FORMA
+INSERT INTO DETALLE_VENTA VALUES('V0007','C004','C001','V007',1,10)
+select * from DETALLE_VENTA
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+--CONSULTAR TODO VENDEDOR
+select * from VENDEDOR
+
+--CONSULTAR SOLO id_vendedor,nombre_ven
+select id_vendedor,nombre_ven from VENDEDOR
+
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+--Actualizar datos
+--COMANDO UPDATE
+UPDATE VENDEDOR SET nombre_ven = 'jesus',
+					fecha_nac = '10/25/1980'
+					WHERE id_vendedor = 'V007'
+
+select * from VENDEDOR
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--CAMBIAMOS EL nombbre_vendedor DE TODOS LOS VENDEDOR
+UPDATE VENDEDOR SET nombre_ven = 'alex'
+SELECT * FROM VENDEDOR
+
+
+
+--CONSULTA SENCILLA
+SELECT * from VENDEDOR
+
+--MOSTRAR TODOS LOS REGISTROS CON ALIAS
+SELECT id_vendedor AS 'vendedor',
+		nombre_ven AS 'nombre del vendedor',
+		fecha_nac AS 'fecha del nacimiento'
+		FROM VENDEDOR
+
+--MOSTRAMOS LOS DATOS DEL CLIENTE NUMERO 5
+SELECT id_vendedor AS 'id del vendedor',
+		nombre_ven AS 'nombre del vendedor',
+		fecha_nac AS 'fecha del nacimiento'
+		FROM VENDEDOR
+		WHERE id_vendedor = 'V007'
+
+
+
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+
+--Actualiza la tabla producto asignar la columna fecha_nac para cambiar todos '10/25/1980'.
+--Set = se utiliza para asignar valores a variables
+
+Update VENDEDOR set fecha_nac= '10/25/1980'
+select * from VENDEDOR
+
+
+--Ejemplo 2:
+--Actualización de la tabla VENDEDOR
+--Asignar nombre_vendedor alexander
+--donde el nombre sea igual a alexander
+
+Update VENDEDOR set nombre_ven = 'alexander' 
+Where id_vendedor = 'V012'
+
+Select * FROM VENDEDOR
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--Selecciona todo de producto 
+--Donde precio sea menor de 500
+--Where = donde
+
+SELECT * FROM VENDEDOR
+Where id_vendedor >= 'V010'
+
+
+--Ejemplo 2
+Select * FROM VENDEDOR
+Where nombre_ven = 'jesus' 
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--selecciona solo mensionado
+select id_venta, id_producto,id_cliente
+from DETALLE_VENTA
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--Delete = eliminar 
+--Elimina tabla de DETALLE_VENTA donde id_producto que tenga 'C006'.
+Delete FROM DETALLE_VENTA
+Where id_producto = 'C006'
+
+Select * FROM DETALLE_VENTA
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--ORDER by asc = ordenar menor a mayor
+
+Select * FROM VENDEDOR
+ORDER by id_vendedor asc
+
+
+
+--ORDER by Desc = mayor a menor
+Select * FROM VENDEDOR
+ORDER by id_vendedor Desc
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--Autofiltro
+--% = significa que puede ser cualquier abecedario. 
+
+SELECT * FROM VENDEDOR
+Where nombre_ven like 'j%' 
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--se utiliza en una cláusula WHERE para filtrar resultados según una 
+--lista específica de valores en una columna particular. Permite 
+--seleccionar registros cuyos valores coincidan con cualquiera de 
+--los valores proporcionados en la lista.
+
+select * from VENDEDOR
+where nombre_ven in ('jesus','alex')
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--not in = si no esta o que no este
+select * from VENDEDOR
+where nombre_ven not in ('jesus','alex')
+
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--selecciona toda la fila y lo suma y se va llamar totales_pagar esa columna
+--donde la tabla DETALLE_VENTA
+select sum(total_pagar) as totales_pagar
+from DETALLE_VENTA
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--AVG es para sacar promedio
+select AVG(total_pagar) AS PROMEDIO
+from DETALLE_VENTA
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--MONTO MAXIMO
+select * from VENDEDOR
+
+select MAX(id_vendedor) as maximo_Numero
+from VENDEDOR
+
+--MONTO MINIMO
+select MIN(id_vendedor) as MINIMO_numero
+from VENDEDOR
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--COUNT PARA CONTAR CUANTOS COMUNAS HAY
+SELECT COUNT(*) AS CANTIDAD
+FROM VENDEDOR
+
+
+
+
+--EJEMPLO 2
+--COUNT PARA CONTAR CUANTOS COMUNAS HAY de mayores de 5000
+SELECT COUNT(*) AS MAYORESDE10
+FROM VENDEDOR
+WHERE id_vendedor > 'V010'
+
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--Nos muestra todos los nombres vendedo
+
+select * from VENDEDOR
+
+select distinct (nombre_ven)
+from VENDEDOR
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--lower = minusculas
+--upper = mayusculas
+select upper(id_vendedor) as id_Vendedores, lower(nombre_ven) as nombres
+from VENDEDOR
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--fecha y hora actual
+select getdate() as acutal
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--imprimir un mensaje
+print ('hola mundo')
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--crear variable
+declare @numero int -->declara una variable llamado numero
+
+set @numero = 25 -->asignar valores a una variables que seria @numero
+
+print @numero
+
+
+--EJEMPLO 2
+--CREAR VARIABLES
+Declare @edad int
+Set @edad = 95
+
+If (@edad >= 18)
+    Print ('es mayor de edad')
+    If (@edad >80)
+    Print ('es de 3ra edad')
+
+Else
+    Print ('es menor de edad ')
+
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--Funcion while
+
+Declare @contador int
+Set @contador = 1
+
+While (@contador < 10)
+Begin
+   Print @contador
+   Set @contador = @contador + 1
+
+End
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--Operaciones aritmética
+Declare @var1 int
+Declare @var2 int
+
+Set @var1 =100 --> asignar un 5
+Set @var2 =2 --> asignar un 15
+
+Print (@var1 + @var2) 
+Print (@var1 - @var2)
+Print (@var1 * @var2)
+Print (@var1 / @var2)
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--EJEMPLOS PROCEDIMIENTOS
+create procedure insertar (@id_vendedor varchar(50), @nombre_ven varchar(51), @fecha_nac date)
+as
+begin
+
+insert into VENDEDOR(id_vendedor, nombre_ven,fecha_nac)
+values (@id_vendedor, @nombre_ven, @fecha_nac)
+
+end
+
+exec insertar 'V012', 'Diego', '08/11/2003'
+print('ejempo')
+
+select * from VENDEDOR
+
+
+
+
+EJEMPLO 2
+CREATE PROCEDURE BUSCARPRODUCTO(@id_vendedor varchar(50)) -->parametro id_vendedor
+as
+
+begin 
+	select * from VENDEDOR
+		where id_vendedor like '%' + @id_vendedor + '%'
+end
+
+exec BUSCARPRODUCTO 'V006'
+
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--PARA EJECUTAR O MOSTRAR EL PROCEDIMIENTO
+execute existente
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+EJEMPLOS
+create proc existente
+as
+begin
+select * from DETALLE_VENTA
+where total_pagar >= 20;
+end
+
+execute existente
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+
+--GRABAR VENDEDOR
+Create Procedure grabar(
+@idvendedor Varchar(30), @nombre Varchar(40), @fecha date)
+AS
+	IF NOT EXISTS (SELECT * FROM VENDEDOR WHERE id_vendedor = @idvendedor)
+	BEGIN
+		Insert into VENDEDOR Values (@idvendedor, @nombre, @fecha)
+    END
+    ELSE
+    BEGIN
+       PRINT 'ERROR: EL LIBRO YA EXISTE'
+    END
+Go
+-- PRUEBA DEL PROCEDMIENTO ALMACENADO.
+
+EXECUTE grabar 'V013', 'alexander', '09/25/2000'
+Go
+
+SELECT * FROM VENDEDOR
+Go
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+--CONSULTAR VENDEDOR
+Create Procedure Consultar_VENDEDOR(@idvendedor Varchar(30))
+AS
+	IF EXISTS (SELECT * FROM VENDEDOR WHERE id_vendedor = @idvendedor)
+	BEGIN
+		SELECT *
+		FROM VENDEDOR
+		WHERE id_vendedor = @idvendedor
+    END
+    ELSE
+    BEGIN
+       PRINT 'ERROR: EL LIBRO NO EXISTE'
+    END
+Go
+
+-- Prueba del Procedimiento
+EXECUTE Consultar_VENDEDOR'V014'
+
+
+-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
+-- ACTUALIZACION
+--MODIFICAR LIBRO
+Create Procedure actualizar(
+@idvendedor Varchar(25), @nombre Varchar(40), @fecha date)
+AS
+	IF EXISTS (SELECT * FROM VENDEDOR WHERE id_vendedor = @idvendedor)
+	BEGIN
+		Update VENDEDOR Set id_vendedor=@idvendedor, nombre_ven=@nombre, fecha_nac= @fecha
+		Where id_vendedor=@idvendedor
+    END
+    ELSE
+    BEGIN
+       PRINT 'ERROR: EL LIBRO NO EXISTE'
+    END
+Go
+
+-- PRUEBA
+EXECUTE actualizar 'V007','josh','09/25/2001'
+Go
+
+SELECT * FROM VENDEDOR
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
